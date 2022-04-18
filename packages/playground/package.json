@@ -1,0 +1,20 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "plugin-vue": "workspace:*",
+    "less": "^4.1.2",
+    "typescript": "^4.5.4",
+    "vite": "workspace:*",
+    "vue-tsc": "^0.29.8"
+  }
+}
