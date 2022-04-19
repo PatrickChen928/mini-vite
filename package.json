@@ -5,7 +5,8 @@
   "main": "index.js",
   "packageManager": "pnpm@6.32.6",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cd packages/playground/html && npm run dev",
+    "build": "cd packages/vite && npm run build"
   },
   "repository": {
     "type": "git",

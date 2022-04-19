@@ -1,9 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
     "module": "commonjs",
+    "lib": ["ESNext"],
     "moduleResolution": "Node",
-    "declaration": true,
-    "paths": {}
+    "strict": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true
   }
 }
