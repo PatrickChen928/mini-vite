@@ -7,7 +7,7 @@ function transformCss(id: string, css: string) {
   `
 }
 
-export function cssPlugin(_root: string) {
+export function cssPlugin() {
   return {
     name: 'vite:css',
     async transform(code: string, id: string) {

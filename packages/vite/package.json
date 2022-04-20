@@ -23,6 +23,7 @@
     "etag": "^1.8.1",
     "picocolors": "^1.0.0",
     "rollup": "^2.59.0",
+    "rollup-plugin-esbuild": "^4.9.1",
     "sirv": "^2.0.2"
   },
   "devDependencies": {
