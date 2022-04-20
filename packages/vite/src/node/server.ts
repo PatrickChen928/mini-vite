@@ -5,11 +5,11 @@ import * as path from 'path'
 import * as fs from 'fs'
 import history from 'connect-history-api-fallback'
 import sirv from 'sirv'
-import { indexHtmlMiddleware } from './indexHtmlMiddleware'
+import { indexHtmlMiddleware } from './middlewares/indexHtmlMiddleware'
 import { createPluginContainer } from './pluginContainer'
 import { resolvePlugin } from './plugins/resolvePlugin'
 import { cssPlugin } from './plugins/cssPlugin'
-import { transformMiddleware } from './transformMiddleware'
+import { transformMiddleware } from './middlewares/transformMiddleware'
 import type { Plugin } from 'rollup'
 
 export interface ViteConfig {

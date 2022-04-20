@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import * as path from 'path'
 import * as fs from 'fs'
-import { send } from './send'
+import { send } from '../send'
 
 function transforHtml(html: string) {
   const headRE = /([\t]*)<\/head>/i

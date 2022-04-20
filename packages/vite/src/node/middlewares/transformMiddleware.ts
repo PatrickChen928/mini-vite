@@ -1,6 +1,6 @@
 import type { NextHandleFunction } from 'connect'
-import type { PluginContainer } from './pluginContainer'
-import { send } from './send'
+import type { PluginContainer } from '../pluginContainer'
+import { send } from '../send'
 
 const IgnoredList = ['/', '/favicon.ico']
 

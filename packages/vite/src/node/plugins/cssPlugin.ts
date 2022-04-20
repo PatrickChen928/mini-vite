@@ -1,5 +1,3 @@
-import * as path from 'path'
-
 function transformCss(id: string, css: string) {
   return `
     import { updateStyle as __vite__updateStyle } from '/@vite/client'
@@ -9,7 +7,7 @@ function transformCss(id: string, css: string) {
   `
 }
 
-export function cssPlugin(root: string) {
+export function cssPlugin(_root: string) {
   return {
     name: 'vite:css',
     async transform(code: string, id: string) {
