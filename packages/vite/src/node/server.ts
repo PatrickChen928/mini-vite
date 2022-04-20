@@ -5,15 +5,15 @@ import * as path from 'path'
 import * as fs from 'fs'
 import history from 'connect-history-api-fallback'
 import sirv from 'sirv'
-import { indexHtmlMiddle } from './indexHtmlMiddle'
+import { indexHtmlMiddleware } from './indexHtmlMiddleware'
+import { createPluginContainer } from './pluginContainer'
+import { resolvePlugin } from './resolvePlugin'
+import { transformMiddleware } from './transformMiddleware'
+import type { Plugin } from 'rollup'
 
-function resolveConfig(inlineConfig = {}) {
-  console.log(process.cwd())
-  return {
-    root: process.cwd(),
-    watch: {} as any,
-    ...inlineConfig
-  }
+export interface ViteConfig {
+  root?: string
+  plugins?: Plugin[]
 }
 
 export interface ViteDevServer {
@@ -22,26 +22,27 @@ export interface ViteDevServer {
   close: () => any
 }
 
+function resolveConfig(inlineConfig: ViteConfig): ViteConfig {
+  const root = process.cwd()
+  return {
+    root,
+    plugins: [resolvePlugin(root), ...(inlineConfig.plugins || [])]
+  }
+}
+
 export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
   const config = resolveConfig(inlineConfig)
 
-  const root = config.root
-  console.log(root)
-
+  const root = config.root!
   const middlewares = connect()
 
   const httpServer = http.createServer(middlewares)
-  const { ignored = [], watchOptions = {} } = config.watch
+  const pluginContainer = createPluginContainer(config.plugins!)
   const watcher = chokidar.watch(path.resolve(root), {
-    ignored: [
-      '**/node_modules/**',
-      '**/.git/**',
-      ...(Array.isArray(ignored) ? ignored : [ignored])
-    ],
+    ignored: ['**/node_modules/**', '**/.git/**'],
     ignoreInitial: true,
     ignorePermissionErrors: true,
-    disableGlobbing: true,
-    ...watchOptions
+    disableGlobbing: true
   })
   watcher.on('change', (file) => {
     console.log('change', file)
@@ -73,6 +74,8 @@ export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
     console.log(req.url)
     next()
   })
+
+  middlewares.use(transformMiddleware(pluginContainer))
 
   // 处理静态资源
   middlewares.use(
@@ -110,12 +113,12 @@ export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
   )
 
   // 匹配html
-  middlewares.use(indexHtmlMiddle(root))
+  middlewares.use(indexHtmlMiddleware(root))
 
   // 没有匹配到就返回404
   middlewares.use(function (_req, res) {
     res.statusCode = 404
-    res.end('Page 404')
+    res.end('<h1>Page 404</h1>')
   })
   let isOptimized = false
   const listen = httpServer.listen.bind(httpServer)

@@ -1,4 +1,4 @@
-import { getContent } from './content.ts'
+import { getContent } from './content'
 
 function render() {
   const box = document.getElementById('app')
