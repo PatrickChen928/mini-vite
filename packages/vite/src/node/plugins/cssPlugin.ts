@@ -1,5 +1,4 @@
 import * as path from 'path'
-import * as fs from 'fs/promises'
 
 function transformCss(id: string, css: string) {
   return `
@@ -13,23 +12,11 @@ function transformCss(id: string, css: string) {
 export function cssPlugin(root: string) {
   return {
     name: 'vite:css',
-    async resolveId(id: string) {
-      // 暂时只支持css
+    async transform(code: string, id: string) {
       if (/\.css$/.test(id)) {
-        return path.join(root, id)
+        return transformCss(id, code)
       }
       return null
-    },
-    async load(id: string) {
-      try {
-        if (/\.css$/.test(id)) {
-          const css = await fs.readFile(id, 'utf-8')
-          return transformCss(id, css)
-        }
-      } catch (e) {
-        console.log(id + ' not exist')
-      }
-      return ''
     }
   }
 }

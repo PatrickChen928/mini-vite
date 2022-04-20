@@ -15,8 +15,13 @@ export function transformMiddleware(
       return null
     }
     const code = (await container.load(result.id)) as string
+
+    const transformCode = await container.transform(code, result.id)
+    if (transformCode == null) {
+      return null
+    }
     return {
-      code: code,
+      code: transformCode.code,
       type: /\.(css|less|sass|scss)(&|\?)/.test(result.id) ? 'css' : 'js'
     }
   }

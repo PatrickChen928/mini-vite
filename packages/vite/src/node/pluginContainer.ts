@@ -2,12 +2,12 @@ import type {
   Plugin,
   PartialResolvedId,
   LoadResult,
-  TransformResult
+  SourceDescription
 } from 'rollup'
 export interface PluginContainer {
   resolveId: (id: string) => Promise<PartialResolvedId | null>
   load: (id: string) => Promise<LoadResult | null>
-  transform: (id: string) => Promise<TransformResult | null>
+  transform: (code: string, id: string) => Promise<SourceDescription | null>
 }
 
 export function createPluginContainer(plugins: Plugin[]): PluginContainer {
@@ -39,18 +39,17 @@ export function createPluginContainer(plugins: Plugin[]): PluginContainer {
       }
       return null
     },
-    async transform(id) {
+    async transform(code, id) {
       for (const plugin of plugins) {
         if (plugin.transform) {
           // @ts-ignore
-          const result = await plugin.transform(id)
+          const result = await plugin.transform(code, id)
           if (result) {
-            const code = typeof result === 'string' ? result : result.code
-            return { code }
+            code = typeof result === 'string' ? result : result.code!
           }
         }
       }
-      return null
+      return { code }
     }
   }
 }
