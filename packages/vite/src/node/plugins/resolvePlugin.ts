@@ -41,8 +41,8 @@ export function resolvePlugin(root: string) {
         return await fs.readFile(id, 'utf-8')
       } catch (e) {
         console.log(id + ' not exist')
-        return ''
       }
+      return ''
     }
   }
 }

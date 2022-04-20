@@ -7,7 +7,8 @@ import history from 'connect-history-api-fallback'
 import sirv from 'sirv'
 import { indexHtmlMiddleware } from './indexHtmlMiddleware'
 import { createPluginContainer } from './pluginContainer'
-import { resolvePlugin } from './resolvePlugin'
+import { resolvePlugin } from './plugins/resolvePlugin'
+import { cssPlugin } from './plugins/cssPlugin'
 import { transformMiddleware } from './transformMiddleware'
 import type { Plugin } from 'rollup'
 
@@ -26,7 +27,11 @@ function resolveConfig(inlineConfig: ViteConfig): ViteConfig {
   const root = process.cwd()
   return {
     root,
-    plugins: [resolvePlugin(root), ...(inlineConfig.plugins || [])]
+    plugins: [
+      cssPlugin(root),
+      resolvePlugin(root),
+      ...(inlineConfig.plugins || [])
+    ]
   }
 }
 

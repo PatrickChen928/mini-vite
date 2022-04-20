@@ -15,10 +15,9 @@ export function transformMiddleware(
       return null
     }
     const code = (await container.load(result.id)) as string
-    console.log(code, 'transformMiddleware load code')
     return {
       code: code,
-      type: /\.(css|less|sass|scss)/.test(result.id) ? 'css' : 'js'
+      type: /\.(css|less|sass|scss)(&|\?)/.test(result.id) ? 'css' : 'js'
     }
   }
   return async (req, res, next) => {
