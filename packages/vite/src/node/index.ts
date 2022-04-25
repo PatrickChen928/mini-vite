@@ -9,7 +9,9 @@ cli
   .alias('serve')
   .action(async () => {
     const { createServer } = await import('./server')
-    const server = await createServer()
+    const server = await createServer({
+      mode: 'development'
+    })
 
     const port = await server.listen()
     console.log()

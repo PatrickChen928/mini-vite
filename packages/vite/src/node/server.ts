@@ -8,26 +8,13 @@ import sirv from 'sirv'
 import { indexHtmlMiddleware } from './middlewares/indexHtmlMiddleware'
 import { createPluginContainer } from './pluginContainer'
 import { transformMiddleware } from './middlewares/transformMiddleware'
-import { getPlugins } from './plugins'
-import type { Plugin } from 'rollup'
-
-export interface ViteConfig {
-  root?: string
-  plugins?: Plugin[]
-}
+import { resolveConfig } from './config'
+import { createWebSocketServer } from './ws'
 
 export interface ViteDevServer {
   listen: () => any
   httpServer: http.Server
   close: () => any
-}
-
-function resolveConfig(inlineConfig: ViteConfig): ViteConfig {
-  const root = process.cwd()
-  return {
-    root,
-    plugins: [...getPlugins(true, { root }), ...(inlineConfig.plugins || [])]
-  }
 }
 
 export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
@@ -38,6 +25,8 @@ export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
 
   const httpServer = http.createServer(middlewares)
   const pluginContainer = createPluginContainer(config.plugins!)
+  const ws = createWebSocketServer()
+
   const watcher = chokidar.watch(path.resolve(root), {
     ignored: ['**/node_modules/**', '**/.git/**'],
     ignoreInitial: true,
@@ -46,6 +35,24 @@ export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
   })
   watcher.on('change', (file) => {
     console.log('change', file)
+    if (file.endsWith('.html')) {
+      ws.send({
+        type: 'full-reload',
+        path: file
+      })
+    } else {
+      // TODO: 根据ModuleGraph收集依赖
+      ws.send({
+        type: 'update',
+        updates: [
+          {
+            type: /\.t|js$/.test(file) ? 'js-update' : 'css-update',
+            file: file.replace(root, ''),
+            timestamp: Date.now()
+          }
+        ]
+      })
+    }
   })
 
   watcher.on('add', (file) => {
@@ -56,6 +63,7 @@ export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
     console.log('unlink', file)
   })
   const server = {
+    ws,
     httpServer,
     close: async () => {
       await watcher.close()

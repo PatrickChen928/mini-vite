@@ -1,8 +1,31 @@
-export function add(num1: number, num2: number) {
-  return num1 + num2
-}
+const socket = new WebSocket('ws://localhost:24678/')
 
 const sheetsMap = new Map()
+
+socket.addEventListener('message', async ({ data }) => {
+  handleMessage(JSON.parse(data))
+})
+
+async function fetchUpdate(update: any) {
+  await import(update.file + '?t=' + update.timestamp)
+}
+
+function handleMessage(payload: any) {
+  switch (payload.type) {
+    case 'full-reload':
+      location.reload()
+      break
+    case 'update':
+      payload.updates.forEach((update: any) => {
+        if (update.type === 'js-update') {
+          fetchUpdate(update)
+        } else {
+          // TODO
+        }
+      })
+      break
+  }
+}
 
 export function updateStyle(id: string, css: string) {
   let style = sheetsMap.get(id)

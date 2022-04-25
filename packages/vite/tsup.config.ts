@@ -6,5 +6,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   external: ['vite/dist/client/index.mjs'],
-  format: ['cjs', 'esm']
+  format: ['cjs', 'esm'],
+  target: 'es2018'
 })
