@@ -6,7 +6,8 @@
   "packageManager": "pnpm@6.32.6",
   "scripts": {
     "dev": "cd packages/playground/html && npm run dev",
-    "build": "cd packages/vite && npm run build"
+    "build": "cd packages/vite && npm run build",
+    "build:html": "cd packages/playground/html && npm run build"
   },
   "repository": {
     "type": "git",

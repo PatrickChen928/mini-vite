@@ -19,6 +19,17 @@ cli
     console.log()
   })
 
+cli
+  .command('build [root]', 'build for production')
+  .alias('dev')
+  .alias('serve')
+  .action(async () => {
+    const { startBuild } = await import('./build')
+    await startBuild({
+      mode: 'production'
+    })
+  })
+
 cli.help()
 
 cli.parse()

@@ -22,9 +22,12 @@
     "es-module-lexer": "^0.10.5",
     "esbuild": "^0.14.27",
     "etag": "^1.8.1",
+    "node-html-parser": "^5.3.3",
     "picocolors": "^1.0.0",
+    "postcss": "^8.4.12",
     "rollup": "^2.59.0",
     "rollup-plugin-esbuild": "^4.9.1",
+    "rollup-plugin-postcss": "^4.0.2",
     "sirv": "^2.0.2",
     "ws": "^8.5.0"
   },
