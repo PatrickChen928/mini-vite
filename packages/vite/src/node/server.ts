@@ -18,7 +18,7 @@ export interface ViteDevServer {
 }
 
 export async function createServer(inlineConfig = {}): Promise<ViteDevServer> {
-  const config = resolveConfig(inlineConfig)
+  const config = await resolveConfig(inlineConfig)
 
   const root = config.root!
   const middlewares = connect()

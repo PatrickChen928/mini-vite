@@ -2,14 +2,14 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import parse from 'node-html-parser'
 import { rollup } from 'rollup'
-import { getPlugins } from './plugins'
+import { resolveConfig } from './config'
 import type { ViteConfig } from './config'
 
 const root = process.cwd()
 const dist = path.resolve(root, './dist')
 
 export async function startBuild(_config: ViteConfig) {
-  const plugins = getPlugins(false)
+  const config = await resolveConfig({ mode: 'production' })
 
   await fs.rm(dist, { recursive: true, force: true })
   await fs.mkdir(dist)
@@ -19,8 +19,8 @@ export async function startBuild(_config: ViteConfig) {
 
   await processHtml(indexHtmlPath, disIndexHtmlPath, async (src: string) => {
     const bundle = await rollup({
-      input: path.resolve(root, src),
-      plugins
+      input: config.input || path.resolve(root, src),
+      plugins: config.plugins
     })
     const { output } = await bundle.write({
       dir: dist,
