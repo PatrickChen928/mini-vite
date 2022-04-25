@@ -28,4 +28,7 @@ pnpm run build
 // run dev
 pnpm run dev
 
+// build `html`
+pnpm run build:html
+
 ```
